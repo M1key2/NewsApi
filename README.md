@@ -8,8 +8,7 @@ API RESTful para la gestión de noticias, que permite manejar artículos, catego
 - Node.js
 - Express
 - Sequelize (ORM)
-- MySQL o PostgreSQL
-- Dotenv
+- MySQL
 
 ## 📦 Instalación
 
