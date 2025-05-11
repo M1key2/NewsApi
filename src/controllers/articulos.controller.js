@@ -1,52 +1,56 @@
-import ArticulosModel from "../models/articulos.model.js";
-  
-export const getArticulos = async function(req, res){
-try {
-    const articulos = await ArticulosModel.getArticulos();
-    res.json(articulos);
-} catch (error) {
-    res.status(500).json({
-        message: error.message
-    });
-}
-}
+import ArticulosModel from '../models/articulos.model.js';
+
+
+export const getArticulos = async (req, res) => {
+  const articulos = await ArticulosModel.findAll();
+  res.json(articulos);
+};
+
 export const getArticuloById = async (req, res) => {
-    try {
+  try {
       const { id } = req.params;
-      const articulo = await ArticulosModel.getArticuloById(id); // Usa el método del modelo
+      const articulo = await ArticulosModel.findByPk(id);
       if (!articulo) {
-        return res.status(404).json({ message: 'Artículo no encontrado' });
+          return res.status(404).send({ message: 'Artículo no encontrado' });
       }
       res.json(articulo);
-    } catch (error) {
-      console.error('Error en getArticuloById:', error); // Agrega esto para depurar
-      res.status(500).json({ message: 'Error al obtener el artículo', error });
-    }
-  };
-  
-  // Insertar un nuevo artículo
-  export const insertArticulo = async (req, res) => {
-    try {
-      const { titulo, contenido, id_categoria, id_fuente, fecha_publicacion } = req.body;
-  
-      // Validación de campos obligatorios
-      if (!titulo || !id_categoria || !id_fuente || !fecha_publicacion) {
-        return res.status(400).json({ message: 'Todos los campos obligatorios deben estar presentes' });
-      }
-  
+  } catch (error) {
+      res.status(500).json({ message: 'Error al obtener el artículo', error: error.message });
+  }
+};
+export const createArticulo = async (req, res) => {
+  const { titulo, contenido, id_categoria, id_fuente, fecha_publicacion } = req.body;
+  const articulo = await ArticulosModel.create({
+    titulo,
+    contenido,
+    id_categoria,
+    id_fuente,
+    fecha_publicacion
+  });
+  res.json(articulo);
+}
+export const updateArticulo = async (req, res) => {
+  const { id } = req.params;
+  const { titulo, contenido, id_categoria, id_fuente, fecha_publicacion } = req.body;
+  const articulo = await ArticulosModel.findByPk(id);
+  if (!articulo) {
+    return res.status(404).send({ message: 'Artículo no encontrado' });
+  }
+  articulo.titulo = titulo;
+  articulo.contenido = contenido;
+  articulo.id_categoria = id_categoria;
+  articulo.id_fuente = id_fuente;
+  articulo.fecha_publicacion = fecha_publicacion;
+  await articulo.save();
+  res.json(articulo);
+}
+export const deleteArticulo = async (req, res) => {
+  const { id } = req.params;
+  const articulo = await ArticulosModel.findByPk(id);
+  if (!articulo) {
+    return res.status(404).send({ message: 'Artículo no encontrado' });
+  }
+  await articulo.destroy();
+  res.send({ message: 'Artículo eliminado correctamente' });
+}
 
-  
-      const nuevoArticulo = await ArticulosModel.insertArticulo({
-        titulo,
-        contenido,
-        id_categoria,
-        id_fuente,
-        fecha_publicacion,
-      });
-  
-      res.status(201).json(nuevoArticulo);
-    } catch (error) {
-      console.error('Error en insertArticulo (controlador):', error); // Registra el error completo
-      res.status(500).json({ message: 'Error al insertar el artículo', error: error.message });
-    }
-  };

@@ -1,44 +1,35 @@
-import { pool } from '../db.js';
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
-class ArticulosModel {
-  // Obtener todos los artículos
-  static async getArticulos() {
-    const [rows] = await pool.query('SELECT * FROM articulos');
-    return rows;
-  }
+const Articulo = sequelize.define('Articulo', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  titulo: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  contenido: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  id_categoria: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  id_fuente: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  fecha_publicacion: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+}, {
+  timestamps:false,
+});
 
-  // Obtener un artículo por ID
-  static async getArticuloById(id) {
-    try {
-      const [rows] = await pool.query('SELECT * FROM articulos WHERE id = ?', [id]);
-      return rows[0]; 
-    } catch (error) {
-      console.error('Error en getArticuloById (modelo):', error); 
-      throw error;
-    }
-  }
-
-  // Insertar un nuevo artículo
-  static async insertArticulo({ titulo, contenido, id_categoria, id_fuente, fecha_publicacion }) {
-    try {
-      const [result] = await pool.query(
-        'INSERT INTO articulos (titulo, contenido, id_categoria, id_fuente, fecha_publicacion) VALUES (?, ?, ?, ?, ?)',
-        [titulo, contenido, id_categoria, id_fuente, fecha_publicacion]
-      );
-      return {
-        id: result.insertId,
-        titulo,
-        contenido,
-        id_categoria,
-        id_fuente,
-        fecha_publicacion,
-      };
-    } catch (error) {
-      console.error('Error en insertArticulo (modelo):', error); 
-      throw error;
-    }
-  }
-  
-  }
-
-export default ArticulosModel;
+export default Articulo;
