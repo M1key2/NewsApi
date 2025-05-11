@@ -23,5 +23,6 @@ app.use('/api', routerCategorias);
 app.use('/api', routerFavoritos);
 app.use('/api', routerFuentes);
 app.use('/api', routerUsuarios);
+
 app.use(express.json()); 
 app.listen(port, () => console.log('working' + port));
