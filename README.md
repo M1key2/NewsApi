@@ -24,8 +24,19 @@ cd news-api
 ```bash
 npm install
 ```
+3. Instalar express
+   
+```bash
+npm install express
+```
 
-3. Crea un archivo `.env` en la raíz del proyecto con la siguiente configuración:
+4. Instalar mysql
+   
+```bash
+npm install --save mysql2
+```
+
+5. Crea un archivo `.env` en la raíz del proyecto con la siguiente configuración:
 
 ```env
 PORT=3002
@@ -35,7 +46,7 @@ DB_PASS=tu_contraseña
 DB_NAME=nombre_de_la_base
 ```
 
-4. Ejecuta la API en modo desarrollo:
+6. Ejecuta la API en modo desarrollo:
 
 ```bash
 npm run dev
